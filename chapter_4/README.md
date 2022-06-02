@@ -32,8 +32,8 @@ Accessing data in the heap is slower than accessing data on the stack because yo
 
 ```rust
 {
-	let s = String::from("hello"); // s é válido a partir desse ponto
-	// faz algo com s
+    let s = String::from("hello"); // s é válido a partir desse ponto
+    // faz algo com s
 } // esse escopo foi finalizado, logo s não é mais uma variável válida	
 ```
 
@@ -54,10 +54,10 @@ Take a look at Figure 4-1 to see what is happening to String under the covers. A
 - Exemplo de código que não compila. 
 ```
 {
-	let s1 = String::from("hello");
-	let s2 = s1;
+    let s1 = String::from("hello");
+    let s2 = s1;
 
-	println!("{}, world!", s1);
+    println!("{}, world!", s1);
 }
 ```
 
@@ -67,10 +67,10 @@ Após s1 ser movido para s2, Rust entende que s1 não é mais válido. Fazendo i
 
 ```rust
 {
-	let s1 = String::from("hello");
-	let s2 = s1.clone();
+    let s1 = String::from("hello");
+    let s2 = s1.clone();
 
-	println!("s1 = {}, s2 = {}", s1, s2);
+    println!("s1 = {}, s2 = {}", s1, s2);
 }
 ```
 
