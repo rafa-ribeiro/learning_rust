@@ -52,12 +52,12 @@ Take a look at Figure 4-1 to see what is happening to String under the covers. A
 - O conteúdo da String fica armazenadado na memória Heap.
 
 - Exemplo de código que não compila. 
-```rust
+```
 {
 	let s1 = String::from("hello");
-    let s2 = s1;
+	let s2 = s1;
 
-    println!("{}, world!", s1);
+	println!("{}, world!", s1);
 }
 ```
 
@@ -68,9 +68,9 @@ Após s1 ser movido para s2, Rust entende que s1 não é mais válido. Fazendo i
 ```rust
 {
 	let s1 = String::from("hello");
-    let s2 = s1.clone();
+	let s2 = s1.clone();
 
-    println!("s1 = {}, s2 = {}", s1, s2);
+	println!("s1 = {}, s2 = {}", s1, s2);
 }
 ```
 
