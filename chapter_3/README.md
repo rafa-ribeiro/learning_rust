@@ -63,9 +63,9 @@ fn main() {
 __9.__ Declarando arrays com tipo e tamanho:
 
 ```rust
-	fn main() {
-		let a: [i32; 5] = [1, 2, 3, 4, 5];
-	}
+fn main() {
+	let a: [i32; 5] = [1, 2, 3, 4, 5];
+}
 ```
 
 __10.__ Arrays x Vector -> Arrays possuem tamanho fixo enquanto que Vectors possuem tamanho variável, podem ser acrescido ou encolhidos conforme necessidade. Arrays devem ser usados quando sabemos a quantidade de elementos que estamos trabalhando, exemplo, meses do ano, dias da semana, etc
@@ -83,9 +83,9 @@ fn main() {
 __1.__ Declarando uma função em Rust:
 
 ```rust
-	fn my_funct() {
-
-	}
+fn my_funct() {
+	// do something
+}
 ```
 
 __2.__ A ordem de declaração das funções não importa para o compilador Rust
@@ -99,7 +99,7 @@ __3.__ Statements são instruções que executam alguma ação e não retornam u
 __4.__ Expressions são avaliadas e resultam em um valor
 
 ```
-Expressions evaluate to a resulting value.
+	Expressions evaluate to a resulting value.
 ```
 
 __5.__ Dito o que são Statements e Expressions, em Rust NÃO podemos escrever algo como:
@@ -224,4 +224,4 @@ fn main() {
     }
     println!("LIFTOFF!!!");
 }
-```
+``
