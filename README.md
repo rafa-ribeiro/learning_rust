@@ -6,9 +6,9 @@
 - GitHub: https://github.com/rust-lang/book/tree/main/src
  
 
-- [ ] Capítulo 1
-- [ ] Capítulo 2
-- [ ] Capítulo 3
+- [x] Capítulo 1
+- [x] Capítulo 2
+- [x] Capítulo 3
 - [ ] Capítulo 4
 - [ ] Capítulo 5
 - [ ] Capítulo 6
