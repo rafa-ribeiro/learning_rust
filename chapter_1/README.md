@@ -2,32 +2,44 @@
 
 Comando usado para carregar o rust na sessão ativa no terminal:
 
-| source ~/.cargo/env
+```
+source ~/.cargo/env
+```
 
+__1.__ Compilando um arquivo Rust:
 
-1. Compilando um arquivo rust:
+```
+rustc <file>.rs
+```
 
-| rustc <file>.rs
+*Ao compilar, será gerado um novo arquivo de mesmo nome contendo o executável*
 
-Ao compilar, será gerado um novo arquivo de mesmo nome contendo o executável
+__2.__ Criando um projeto usando cargo
 
-2. Criando um projeto usando cargo
+```
+cargo new <project_name>
+```
 
-| cargo new <project_name>
+__3.__ Buildando um projeto com cargo
 
+```
+cargo build
+```
 
-3. Buildando um projeto com cargo
+__4.__ Builda e executa o projeto com somente um comando
 
-| cargo build
+```
+cargo run
+```
 
-4. Builda e executa o projeto com somente um comando
+__5.__ Checando se o arquivo compila, mas sem gerar o executável
 
-| cargo run
+```
+cargo check
+```
 
-5. Checando se o arquivo compila, mas sem gerar o executável
+__6.__ Buildando o projeto para release
 
-| cargo check
-
-6. Buildando o projeto para release
-
-| cargo build --release
+```
+cargo build --release
+```
