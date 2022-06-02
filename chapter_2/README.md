@@ -35,4 +35,4 @@ Gera a documentação das dependências do seu projeto rust usando o comando:
 
 ```
 cargo doc --open
-``
+```
