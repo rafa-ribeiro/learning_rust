@@ -23,9 +23,9 @@ The :: syntax in the ::new line indicates that new is an associated function of 
 
 
 ```
-	io::stdin()
-        .read_line(&mut guess)
-        .expect("Failed to read line");
+io::stdin()
+    .read_line(&mut guess)
+    .expect("Failed to read line");
 ```
 
 No trecho acima, o _&_ indica que o argumento guess é uma *referência* e, assim como variáveis, referências são imutáveis. Para torná-las mutáveis, também precisamos aqui do *mut*
@@ -35,4 +35,4 @@ Gera a documentação das dependências do seu projeto rust usando o comando:
 
 ```
 cargo doc --open
-```
+``
