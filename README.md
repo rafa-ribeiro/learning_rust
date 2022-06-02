@@ -23,7 +23,7 @@
 - [ ] Capítulo 19
 - [ ] Capítulo 20
 
-#### Referência:
+#### Referências:
 __1.__ [The Rust Programming Language](https://doc.rust-lang.org/stable/book/ch00-00-introduction.html)
 
 __2.__ [GitHub Rust Lang Book](https://github.com/rust-lang/book/tree/main/src)
