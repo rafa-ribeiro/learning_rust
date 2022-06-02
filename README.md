@@ -1,10 +1,6 @@
-## Learning rust
+## Learning Rust
 
-
-- The Rust Programming Language (https://doc.rust-lang.org/stable/book/ch00-00-introduction.html)
-
-- GitHub: https://github.com/rust-lang/book/tree/main/src
- 
+![Rust Logo](/assets/rust_logo.jpeg)
 
 - [x] Capítulo 1 - [Installing Rust](/chapter_1/README.md)
 - [x] Capítulo 2 - [Programming a Guessing Game](/chapter_2/README.md)
@@ -26,3 +22,8 @@
 - [ ] Capítulo 18
 - [ ] Capítulo 19
 - [ ] Capítulo 20
+
+#### Referência:
+__1.__ [The Rust Programming Language](https://doc.rust-lang.org/stable/book/ch00-00-introduction.html)
+
+__2.__ [GitHub Rust Lang Book](https://github.com/rust-lang/book/tree/main/src)
