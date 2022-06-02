@@ -6,10 +6,10 @@
 - GitHub: https://github.com/rust-lang/book/tree/main/src
  
 
-- [x] Capítulo 1
-- [x] Capítulo 2
-- [x] Capítulo 3
-- [ ] Capítulo 4
+- [x] Capítulo 1 - [Installing Rust](/chapter_1/README.md)
+- [x] Capítulo 2 - [Programming a Guessing Game](/chapter_2/README.md)
+- [x] Capítulo 3 - [Common Programming Concepts](/chapter_3/README.md)
+- [ ] Capítulo 4 - [Understading Ownership](/chapter_4/README.md)
 - [ ] Capítulo 5
 - [ ] Capítulo 6
 - [ ] Capítulo 7
