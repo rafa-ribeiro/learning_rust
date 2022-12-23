@@ -171,3 +171,183 @@ O exemplo acima deixa claro que em Rust, quando passamos uma variável dessa for
 
 
 ### References and Borrowing
+
+- Exemplo de uso de passagem por referência ao invés de transferência de ownership:
+
+```rust
+fn main() {
+    let s1 = String::from("hello");
+
+    let len = calculate_length(&s1);
+
+    println!("The length of '{}' is {}.", s1, len);
+}
+
+fn calculate_length(s: &String) -> usize {
+    s.len()
+}
+
+```
+
+Reference é algo como um ponteiro em que é um endereço que podemos seguir para acessar o dado armazenado nele, que por sua vez esse dado pertence à uma variável.
+
+No entanto, reference e ponteiro são coisas diferentes. Diferente de um ponteiro, uma reference é garantida de apontar para um endereço de um valor válido de um tipo específico. 
+Como no exemplo acima que podemos ver que a function _calculate_length_ possui um parâmetro que é uma referencia para um endereço de memória do tipo String.
+
+> O oposto de _referencing_ usando _&_ é o de dereferencing, que é simbolizado pelo operador de __dereference__ com __*__
+
+Código comentado:
+
+```rust
+fn main() {
+    let s1 = String::from("hello");
+
+    let len = calculate_length(&s1);
+
+    println!("The length of '{}' is {}.", s1, len);
+}
+
+fn calculate_length(s: &String) -> usize { // s is a reference to a String
+    s.len()
+} // Here, s goes out of scope. But because it does not have ownership of what
+  // it refers to, nothing happens.
+```
+
+> __Borrowing__ é a ação de criar uma _reference_
+
+
+- Borrowing é o termo em inglês para emprestar, para fazer uma alusão de que quando passamos um parâmetro por referência, a variável da função não é dona do valor,
+mas sim ela o pegou emprestado, logo se a função pega ele emprestado, ao terminar de usá-lo, a função deve devolvê-lo para o seu dono.
+
+O exemplo abaixo é de um código que __não funciona__ pois ao se passar emprestado um valor, não é possível modificá-lo, pois assim como as variáveis, as references são por padrão imutáveis.
+
+```
+fn main() {
+    let s = String::from("hello");
+
+    change(&s);
+}
+
+fn change(some_string: &String) {
+    some_string.push_str(", world");
+}
+```
+
+Erro:
+
+```
+$ cargo run
+   Compiling ownership v0.1.0 (file:///projects/ownership)
+error[E0596]: cannot borrow `*some_string` as mutable, as it is behind a `&` reference
+ --> src/main.rs:8:5
+  |
+7 | fn change(some_string: &String) {
+  |                        ------- help: consider changing this to be a mutable reference: `&mut String`
+8 |     some_string.push_str(", world");
+  |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `some_string` is a `&` reference, so the data it refers to cannot be borrowed as mutable
+
+For more information about this error, try `rustc --explain E0596`.
+error: could not compile `ownership` due to previous error
+```
+
+#### Mutable References
+
+Para fazer o código acima funcionar, devemos explicitar que a nossa referência é mutável.
+
+```rust
+fn main() {
+    let mut s = String::from("hello");
+
+    change(&mut s);
+}
+
+fn change(some_string: &mut String) {
+    some_string.push_str(", world");
+}
+```
+
+> Referências mutáveis possuem uma grande restrição: só é possível existir 1 única referência mutável para um mesmo dado por vez.
+
+O código abaixo irá falhar pois tenta criar duas mutable references para a mes variável __s__:
+
+```
+fn main() {
+    let mut s = String::from("hello");
+
+    let r1 = &mut s;
+    let r2 = &mut s;
+
+    println!("{}, {}", r1, r2);
+}
+```
+
+Esse comportamento evita que exista o que em Rust é conhecido por __data race__. Um data race é similar à um __race condition__ e acontece
+quando esses 3 comportamentos ocorrem:
+
+1. Dois ou mais ponteiros acessam o mesmo dado ao mesmo tempo
+2. Pelo menos 1 dos ponteiros está sendo usado para escrever no endereço do dado
+3. Não há um mecanismo utilizado para sincronizar o acesso ao dado
+
+```
+The restriction preventing multiple mutable references to the same data at the same time allows for mutation but in a very controlled fashion. It’s something that new Rustaceans struggle with, because most languages let you mutate whenever you’d like. The benefit of having this restriction is that Rust can prevent data races at compile time. A data race is similar to a race condition and happens when these three behaviors occur:
+
+Two or more pointers access the same data at the same time.
+At least one of the pointers is being used to write to the data.
+There’s no mechanism being used to synchronize access to the data.
+Data races cause undefined behavior and can be difficult to diagnose and fix when you’re trying to track them down at runtime; Rust prevents this problem by refusing to compile code with data races!
+```
+
+No entanto, podemos contornar o efeito acima iniciando um novo escopo usando chaves. Exemplo:
+
+```rust
+fn main() {
+    let mut s = String::from("hello");
+
+    {
+        let r1 = &mut s;
+    } // r1 goes out of scope here, so we can make a new reference with no problems.
+
+    let r2 = &mut s;
+}
+```
+
+O mesmo erro acima, ocorre ao combinarmos referências mutáveis e imutáveis do mesmo dado:
+
+```
+fn main() {
+    let mut s = String::from("hello");
+
+    let r1 = &s; // no problem
+    let r2 = &s; // no problem
+    let r3 = &mut s; // BIG PROBLEM
+
+    println!("{}, {}, and {}", r1, r2, r3);
+}
+```
+
+Desde que um novo escopo se inicie, podemos criar novas referências do dado, como no exemplo abaixo:
+
+```rust
+fn main() {
+    let mut s = String::from("hello");
+
+    let r1 = &s; // no problem
+    let r2 = &s; // no problem
+    println!("{} and {}", r1, r2);
+    // variables r1 and r2 will not be used after this point
+
+    let r3 = &mut s; // no problem
+    println!("{}", r3);
+}
+```
+
+No exemplo acima:
+
+- são criadas as variáveis r1 e r2 que são imutable references de _s_ e são utiliadas na macro println
+- Após usadas, elas saem do escopo (o compilador as descartam)
+- Logo é possível criar r3 que é uma mutable reference
+
+
+### The Slice Type
+
+
