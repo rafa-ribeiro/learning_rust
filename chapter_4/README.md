@@ -79,7 +79,7 @@ group of datais stored on the stack. On the right is the memory on the heap that
 - O conteúdo da String fica armazenadado na memória Heap.
 
 - Exemplo de código que não compila. 
-```
+```rust
 {
     let s1 = String::from("hello");
     let s2 = s1;
@@ -221,7 +221,7 @@ mas sim ela o pegou emprestado, logo se a função pega ele emprestado, ao termi
 
 O exemplo abaixo é de um código que __não funciona__ pois ao se passar emprestado um valor, não é possível modificá-lo, pois assim como as variáveis, as references são por padrão imutáveis.
 
-```
+```rust
 fn main() {
     let s = String::from("hello");
 
@@ -270,7 +270,7 @@ fn change(some_string: &mut String) {
 
 O código abaixo irá falhar pois tenta criar duas mutable references para a mes variável __s__:
 
-```
+```rust
 fn main() {
     let mut s = String::from("hello");
 
@@ -313,7 +313,7 @@ fn main() {
 
 O mesmo erro acima, ocorre ao combinarmos referências mutáveis e imutáveis do mesmo dado:
 
-```
+```rust
 fn main() {
     let mut s = String::from("hello");
 
@@ -350,4 +350,161 @@ No exemplo acima:
 
 ### The Slice Type
 
+Slice ou fatia permite com que se faça referência à porções/sequências de uma coleção, em vez de à coleção inteira. Um Slice é um tipo de referência, portanto não possui ownership.
 
+Vamos tomar esse pequeno programa para entender o uso do Slice:
+- Escreva uma função que recebe uma string de palavras separada por espaço e retorna a primeira palavra encontra nessa string. Se a função não tiver nenhum espaço, significa que a string toda deve ser uma única palavra e então retornada:
+
+```rust
+fn first_word(s: &String) -> usize {
+    let bytes = s.as_bytes();
+
+    for (i, &item) in bytes.iter().enumerate() {
+        if item == b' ' {
+            return i;
+        }
+    }
+
+    s.len()
+}
+```
+
+1. Como nós precisamos iterar a string elemento por elemento para verificar se é um espaço em branco, nós convertemos nossa string para um array de bytes usando o método as_bytes.
+2. Usamos o método iter() que retorna cada elemento na coleção e o enumerate() que obtém esse resultado e o envolve em uma Tupla que contém o índice do elemento no array e uma referência para o próprio elemento, nessa ordem.
+3. O for aqui funciona como no Python, podemos fazer o desestruturar a tupla em váriaveis.
+
+
+#### String Slices
+
+Usando string slices:
+
+```rust
+    let s = String::from("hello world");
+
+    let hello = &s[0..5];
+    let world = &s[6..11];
+```
+
+O Exemplo acima mostra como podemos fazer o slice de uma string usando os índices de início e fim. Esses índices são parecidos com o do Python também, o índice de início aponta para o índice exato do array, enquanto que o índice de fim aponta para o valor fim + 1, ou seja, o intervalo &s[0..5] compreende os índices 0, 1, 2, 3 e 4.
+
+Essas regrinhas também se assemelham a como usamos no Python:
+
+```rust
+    let s = String::from("hello world");
+
+    let slice = &s[..2]; // Quando início omitido, entende que o start é o 0
+    let slice = &s[3..]; // Quando fim omitido, entende que o fim é o len de s
+    let slice = &s[..]; // Quando omite ambos, pega a string toda
+```
+
+Sabendo isso agora, vamos reescrever o pequeno programa acima usando a String Slice. Identificamos uma string slice pelo tipo &str:
+
+```rust
+fn first_word(s: &String) -> &str {
+    let bytes = s.as_bytes();
+
+    for (i, &item) in bytes.iter().enumerate() {
+        if item == b' ' {
+            return &s[0..i];
+        }
+    }
+
+    &s[..]
+}
+```
+
+Usando o String Slice, um possível erro de consistência no caso de alterarmos a string original após a execução da função first_word, pode ser pega ainda em tempo de compilação, saca só:
+
+```rust
+fn main() {
+    let mut s = String::from("hello world");
+
+    let word = first_word(&s);
+
+    s.clear(); // error!
+
+    println!("the first word is: {}", word);
+}
+```
+
+E ao executar:
+
+```
+$ cargo run
+   Compiling ownership v0.1.0 (file:///projects/ownership)
+error[E0502]: cannot borrow `s` as mutable because it is also borrowed as immutable
+  --> src/main.rs:18:5
+   |
+16 |     let word = first_word(&s);
+   |                           -- immutable borrow occurs here
+17 |
+18 |     s.clear(); // error!
+   |     ^^^^^^^^^ mutable borrow occurs here
+19 |
+20 |     println!("the first word is: {}", word);
+   |                                       ---- immutable borrow later used here
+
+For more information about this error, try `rustc --explain E0502`.
+error: could not compile `ownership` due to previous error
+```
+
+Ainda tem uma última melhoria que podemos fazer:
+
+Ao declarar uma string literal, fazemos: 
+
+```rust
+let s = "Hello, world!";
+```
+
+Assim, s é do tipo &str, ou seja, uma referência que aponta para um ponto específico no binário, isso explica também porque string literals são imutáveis, porque &str é uma referência imutável.
+
+Um programador Rust mais experiente, ao invés de escrever: 
+
+```rust
+fn first_word(s: &String) -> &str {}
+```
+
+Poderia escrever:
+
+```rust
+fn first_word(s: &str) -> &str {}
+```
+
+Escrita dessa forma, o parâmetro s aceita tanto valores do tipo &String quanto &str
+
+```rust
+fn main() {
+    let my_string = String::from("hello world");
+
+    // `first_word` works on slices of `String`s, whether partial or whole
+    let word = first_word(&my_string[0..6]);
+    let word = first_word(&my_string[..]);
+    // `first_word` also works on references to `String`s, which are equivalent
+    // to whole slices of `String`s
+    let word = first_word(&my_string);
+
+    let my_string_literal = "hello world";
+
+    // `first_word` works on slices of string literals, whether partial or whole
+    let word = first_word(&my_string_literal[0..6]);
+    let word = first_word(&my_string_literal[..]);
+
+    // Because string literals *are* string slices already,
+    // this works too, without the slice syntax!
+    let word = first_word(my_string_literal);
+}
+```
+
+#### Outros tipos de Slice
+
+Slice também podem ser usados em outras coleções que não somente uma string:
+
+```rust
+let a = [1, 2, 3, 4, 5];
+
+let slice = &a[1..3];
+
+assert_eq!(slice, &[2, 3]);
+```
+
+A variável slice é do tipo &[i32].
